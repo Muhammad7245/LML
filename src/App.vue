@@ -92,7 +92,7 @@ header {
   transition: background-color 0.3s ease;
 }
 .header-spacer {
-  height: 90px; /* Match your header's visual height */
+  height: 90px; /* Match your header's visual heightt */
 }
 header.hovered nav a {
   color: black;
