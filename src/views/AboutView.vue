@@ -1,8 +1,11 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <h1>Hello!</h1>
 </template>
 
-<style>
-</style>
+<script>
+export default {
+  mounted() {
+    alert("Component is now on screen!");
+  }
+}
+</script>

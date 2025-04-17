@@ -146,7 +146,7 @@ const tests = [
         <td class="px-6 py-4 text-gray-900 border-t border-gray-200">{{ test.price }}</td>
         <td class="px-6 py-4 text-gray-700 border-t border-gray-200">{{ test.turnaround }}</td>
         <td class="px-6 py-4 border-t border-gray-200">
-          <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold transition">Book</a>
+          <a href="/book-appointment" class="text-blue-600 hover:text-blue-800 font-semibold transition">Book</a>
         </td>
       </tr>
     </tbody>
