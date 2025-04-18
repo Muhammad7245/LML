@@ -38,7 +38,7 @@ const cards = [
 <template>
   <section class="main-container bg-gray-100 py-16">
     <div class="max-w-7xl mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold text-black mb-2">Our Laboratory Services</h2>
+      <h2 class="text-4xl font-extrabold text-gray-800 mb-2">Our Laboratory Services</h2>
       <p class="text-black mb-10">
         Comprehensive diagnostic testing and medical laboratory services with accurate and timely results.
       </p>

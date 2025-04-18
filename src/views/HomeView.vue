@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ServicesSection from '@/views/ServicesSection.vue'
 import TestCatalog from './TestCatalog.vue';
+import FaqSection from './Faq.vue';
 </script>
 
 <template>
@@ -36,6 +37,9 @@ import TestCatalog from './TestCatalog.vue';
     <ServicesSection />
 <div class="test-catalog-section">
   <TestCatalog/>
+</div>
+<div class="FaqSection">
+  <FaqSection/>
 
 </div>
     

@@ -103,8 +103,8 @@ const tests = [
 </script>
 
 <template>
-  <section class="max-w-7xl mx-auto px-4 py-16">
-    <h2 class="text-4xl font-bold text-center mb-2">Test Catalog & Pricing</h2>
+  <section class="max-w-7xl mx-auto px-4 pt-5 pb-16">
+    <h2 class="text-4xl font-extrabold text-gray-800 text-center mb-2">Test Catalog & Pricing</h2>
     <p class="text-center text-gray-600 mb-8">Browse our comprehensive list of available tests with transparent pricing.</p>
 
     <!-- Tabs -->

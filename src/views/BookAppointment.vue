@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-[#f2f6ff] pt-[80px] px-4 pb-16">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-2">Book Your Appointment</h2>
+  <div class="min-h-screen bg-[#f2f6ff] pt-[20px] px- pb-16">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-4xl font-extrabold text-gray-800 mb-2">Book Your Appointment</h2>
       <p class="text-center text-gray-600 mb-8">
         Schedule your laboratory appointment online - no phone calls or emails required.
       </p>
