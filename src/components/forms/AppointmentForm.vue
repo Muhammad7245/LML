@@ -29,9 +29,9 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Test</label>
         <i class="fas fa-vials absolute left-3 top-9 text-gray-400"></i>
         <select v-model="form.test" :disabled="formDisabled" :class="getFieldClass('test')">
-  <option disabled value="">Select a test</option>
-  <option v-for="test in testOptions" :key="test" :value="test">{{ test }}</option>
-</select>
+          <option disabled value="">Select a test</option>
+          <option v-for="test in testOptions" :key="test" :value="test">{{ test }}</option>
+        </select>
       </div>
 
       <!-- Location -->
@@ -160,6 +160,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import axios from 'axios'
 
 const form = ref({
   serviceType: '',
@@ -175,35 +176,45 @@ const form = ref({
 
 const testOptions = ref<string[]>([])
 
-watch(() => form.value.serviceType, (newService) => {
-  switch (newService) {
-    case 'Blood Test':
-      testOptions.value = ['Complete Blood Count(CBC)', 'Comprehensive Metabolic Panel', 'Liver Function Test(LFT)', 'Thyroid Function Test(TFT)','HbA1c', 'Lipid Panel']
-      break
+watch(
+  () => form.value.serviceType,
+  (newService) => {
+    switch (newService) {
+      case 'Blood Test':
+        testOptions.value = [
+          'Complete Blood Count(CBC)',
+          'Comprehensive Metabolic Panel',
+          'Liver Function Test(LFT)',
+          'Thyroid Function Test(TFT)',
+          'HbA1c',
+          'Lipid Panel',
+        ]
+        break
       case 'Diagnostic Imaging':
-      testOptions.value = ['X-Ray','Ultrasound']
-      break
+        testOptions.value = ['X-Ray', 'Ultrasound']
+        break
       case 'Pathology Services':
-      testOptions.value = ['Biopsy Analysis']
-      break
-    case 'COVID-19 Testing':
-      testOptions.value = ['COVID-19 PCR Test']
-      break
+        testOptions.value = ['Biopsy Analysis']
+        break
+      case 'COVID-19 Testing':
+        testOptions.value = ['COVID-19 PCR Test']
+        break
       case 'Genetic Testing':
-      testOptions.value = ['BRCA1/BRCA2 Gene Test', 'Carrier Screening']
-      break
-    case 'Consultation':
-      testOptions.value = ['Health Checkup Basic']
-      break
-    default:
-      testOptions.value = []
-  }
+        testOptions.value = ['BRCA1/BRCA2 Gene Test', 'Carrier Screening']
+        break
+      case 'Consultation':
+        testOptions.value = ['Health Checkup Basic']
+        break
+      default:
+        testOptions.value = []
+    }
 
-  // Reset test if it's no longer valid
-  if (!testOptions.value.includes(form.value.test)) {
-    form.value.test = ''
-  }
-})
+    // Reset test if it's no longer valid
+    if (!testOptions.value.includes(form.value.test)) {
+      form.value.test = ''
+    }
+  },
+)
 
 const props = defineProps(['form'])
 const emit = defineEmits(['submit', 'success'])
@@ -212,6 +223,8 @@ const isConfirmed = ref(false)
 const formDisabled = ref(false)
 const isLoading = ref(false)
 const attemptedSubmit = ref(false)
+
+const apiURL = 'http://localhost:5000/api/book'
 
 const showDialog = ref(false)
 const dialogMessage = ref('')
@@ -234,21 +247,31 @@ const handleSubmit = async () => {
   const isValid = requiredFields.every((field) => form.value[field as keyof typeof form.value])
 
   if (isValid) {
-    setTimeout(() => {
-      dialogMessage.value = 'Your appointment has been successfully booked!'
-      showDialog.value = true
-      attemptedSubmit.value = false
-      formDisabled.value = false
-      isLoading.value = false
+    axios
+      .post(apiURL, form.value)
+      .then((response) => {
+        setTimeout(() => {
+          dialogMessage.value = 'Your appointment has been successfully booked!'
+          showDialog.value = true
+          attemptedSubmit.value = false
+          formDisabled.value = false
+          isLoading.value = false
 
-      Object.keys(form.value).forEach((key) => {
-        form.value[key as keyof typeof form.value] = ''
+          Object.keys(form.value).forEach((key) => {
+            form.value[key as keyof typeof form.value] = ''
+          })
+
+          emit('submit')
+          emit('success')
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 2000)
+        console.log('Response:', response.data)
       })
-
-      emit('submit')
-      emit('success')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, 2000)
+      .catch((error) => {
+        console.error('Error:', error)
+        dialogMessage.value = 'An error occurred while booking your appointment. Please try again.'
+        showDialog.value = true
+      })
   } else {
     formDisabled.value = false
     isLoading.value = false
@@ -267,6 +290,5 @@ function getFieldClass(field: string) {
   return `${baseClass} ${ringClass} ${errorClass}`
 }
 </script>
-
 
 <!-- Let me know if you'd like to simulate a real fetch()/axios request or connect this to a backend! -->

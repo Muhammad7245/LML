@@ -75,7 +75,6 @@ export default defineComponent({
     const dialogMessage = ref('Your appointment has been successfully booked!')
 
     const submitForm = () => {
-      console.log('Appointment Form Submitted:', form)
       toast.success('Appointment successfully booked!')
       isDialogVisible.value = true
     }
