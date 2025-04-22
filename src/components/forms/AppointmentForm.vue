@@ -34,6 +34,11 @@
         </select>
       </div>
 
+      <!-- Price -->
+      <div v-if="form.price" class="text-blue-700 font-semibold text-lg mt-2">
+        Price: PKR {{ Number(form.price).toLocaleString() }}
+      </div>
+
       <!-- Location -->
       <div class="relative">
         <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Location</label>
@@ -172,7 +177,24 @@ const form = ref({
   phone: '',
   email: '',
   instructions: '',
+  price: '',
 })
+
+const testPrices: Record<string, number> = {
+  'Complete Blood Count(CBC)': 1000,
+  'Comprehensive Metabolic Panel': 2500,
+  'Liver Function Test(LFT)': 2000,
+  'Thyroid Function Test(TFT)': 1800,
+  HbA1c: 1200,
+  'Lipid Panel': 1600,
+  'X-Ray': 3000,
+  Ultrasound: 5000,
+  'Biopsy Analysis': 7000,
+  'COVID-19 PCR Test': 1500,
+  'BRCA1/BRCA2 Gene Test': 10000,
+  'Carrier Screening': 8000,
+  'Health Checkup Basic': 2000,
+}
 
 const testOptions = ref<string[]>([])
 
@@ -208,14 +230,20 @@ watch(
       default:
         testOptions.value = []
     }
-
     // Reset test if it's no longer valid
     if (!testOptions.value.includes(form.value.test)) {
       form.value.test = ''
     }
   },
 )
-
+watch(
+  () => form.value.test,
+  (newTest) => {
+    const price = testPrices[newTest] || 0
+    form.value.price = price.toString()
+    console.log('Selected test price (PKR):', price)
+  },
+)
 const props = defineProps(['form'])
 const emit = defineEmits(['submit', 'success'])
 
