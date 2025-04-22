@@ -1,9 +1,11 @@
 <template>
   <header
-    @mouseenter="hovering = true"
-    @mouseleave="hovering = false"
-    :class="{ hovered: hovering, scrolled: scrolled }"
-  >
+  v-if="!shouldHideHeader"
+  @mouseenter="hovering = true"
+  @mouseleave="hovering = false"
+  :class="{ hovered: hovering, scrolled: scrolled }"
+>
+
     <div class="header-container">
       <img
         alt="Vue logo"
@@ -27,9 +29,24 @@
         <button class="icon-btn">
           <i class="fas fa-search"></i>
         </button>
-        <button class="icon-btn">
-          <i class="fas fa-user"></i>
-        </button>
+
+        <!-- User Icon with Dropdown -->
+        <div class="user-dropdown" ref="dropdownRef">
+          <button class="icon-btn" @click="toggleDropdown">
+            <i class="fas fa-user"></i>
+          </button>
+
+          <div v-if="isDropdownOpen" class="dropdown-menu">
+            <RouterLink to="/profile">My Profile</RouterLink>
+            <RouterLink to="/settings">Settings</RouterLink>
+            <RouterLink to="/logout">Logout</RouterLink>
+            <RouterLink to="/register">Register</RouterLink>
+            <RouterLink to="/login">Login</RouterLink>
+            <RouterLink to="/admin-booking-panel">Admin</RouterLink>
+            
+          </div>
+        </div>
+
         <button class="icon-btn">
           <i class="fas fa-shopping-cart"></i>
         </button>
@@ -37,8 +54,9 @@
     </div>
   </header>
 
-  <!-- Spacer to prevent header overlap on selected pages -->
+  <!-- Spacer to prevent header overlap -->
   <div v-if="needsSpacer" class="header-spacer"></div>
+
 
   <RouterView />
 </template>
@@ -47,40 +65,56 @@
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-// 1. Reactive state
+// Header hover and scroll state
 const hovering = ref(false)
 const scrolled = ref(false)
 
-// 2. Access current route
-const route = useRoute()
+// Dropdown state and ref
+const isDropdownOpen = ref(false)
+const dropdownRef = ref<HTMLElement | null>(null)
 
-// 3. Routes that should force the header background + spacing
-const specialRoutes = ['/test-catalog', '/about', '/faq', '/locations', '/book-appointment', '/patient-reports']
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value
+}
 
-// 4. Check if current route needs spacer
-const needsSpacer = computed(() => specialRoutes.includes(route.path))
-
-// 5. Handle scroll and route-based background
-const updateHeaderState = () => {
-  scrolled.value = window.scrollY > 50 || specialRoutes.includes(route.path)
+const handleClickOutside = (event: MouseEvent) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+    isDropdownOpen.value = false
+  }
 }
 
 onMounted(() => {
   window.addEventListener('scroll', updateHeaderState)
+  document.addEventListener('click', handleClickOutside)
   updateHeaderState()
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', updateHeaderState)
+  document.removeEventListener('click', handleClickOutside)
 })
 
-// 6. Watch for route changes
+// Route logic
+const route = useRoute()
+
+const hideHeaderRoutes = ['/admin-booking-panel', '/login', '/register', '/admin', '/dashboard', '/users', '/settings']
+const shouldHideHeader = computed(() => hideHeaderRoutes.includes(route.path))
+
+
+const specialRoutes = ['/test-catalog', '/about', '/faq', '/locations', '/book-appointment', '/patient-reports']
+const needsSpacer = computed(() => specialRoutes.includes(route.path))
+
+const updateHeaderState = () => {
+  scrolled.value = window.scrollY > 50 || specialRoutes.includes(route.path)
+}
+
 watch(() => route.path, () => {
   updateHeaderState()
 })
 </script>
 
 <style scoped>
+/* General Header Styling */
 header {
   position: fixed;
   top: 0;
@@ -91,48 +125,29 @@ header {
   width: 100%;
   transition: background-color 0.3s ease;
 }
+
 .header-spacer {
-  height: 90px; /* Match your header's visual heightt */
+  height: 90px;
 }
-header.hovered nav a {
-  color: black;
-}
-header.hovered {
-  background-color: white;
-}
-header.scrolled {
-  background-color: #2f3193;
-}
-header.scrolled nav a {
-  color: white;
-}
-header.scrolled .icon-btn {
-  color: white !important;
-}
-header.scrolled .icon-btn:hover {
-  color: #007bff !important;
-}
-header.scrolled .icon-btn i {
-  color: white !important;
-  transition: color 0.3s ease;
-}
-header.scrolled .icon-btn:hover i {
-  color: #007bff !important;
-}
+
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .logo {
   display: block;
   width: 230px;
   height: 50px;
 }
+
+/* Navigation Styling */
 nav {
   flex-grow: 1;
   text-align: center;
 }
+
 nav a {
   display: inline-block;
   padding: 0.75rem 1rem;
@@ -143,13 +158,17 @@ nav a {
   font-weight: 500;
   transition: color 0.3s, transform 0.3s;
 }
+
 nav a:hover {
   color: #007bff !important;
 }
+
+/* Icons */
 .header-icons {
   display: flex;
   gap: 1.5rem;
 }
+
 .icon-btn {
   background: none;
   border: none;
@@ -158,21 +177,90 @@ nav a:hover {
   transition: transform 0.3s, color 0.3s;
   color: white;
 }
-.icon-btn:hover {
-  transform: scale(1.1);
-  color: #007bff !important;
-}
-header.hovered .icon-btn {
-  color: black;
-}
+
 .icon-btn i {
   font-size: 24px;
   transition: opacity 0.3s;
 }
+
+.icon-btn:hover {
+  transform: scale(1.1);
+  color: #007bff !important;
+}
+
 .icon-btn:hover i {
   opacity: 0.8;
 }
 
+/* Hover/Scroll Variants */
+header.hovered nav a {
+  color: black;
+}
+
+header.hovered {
+  background-color: white;
+}
+
+header.hovered .icon-btn {
+  color: black;
+}
+
+header.scrolled {
+  background-color: #2f3193;
+}
+
+header.scrolled nav a {
+  color: white;
+}
+
+header.scrolled .icon-btn {
+  color: white !important;
+}
+
+header.scrolled .icon-btn:hover {
+  color: #007bff !important;
+}
+
+header.scrolled .icon-btn i {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+header.scrolled .icon-btn:hover i {
+  color: #007bff !important;
+}
+
+/* Dropdown */
+.user-dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  z-index: 999;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
   .header-container {
     flex-direction: column;

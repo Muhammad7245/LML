@@ -9,6 +9,8 @@ import AboutView from '../views/AboutView.vue'
 import PatientLogin from '@/views/PatientLogin.vue'
 import PatientRegister from '@/views/PatientRegister.vue'
 
+import AdminLayout from '@/layouts/AdminLayout.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -50,6 +52,40 @@ const router = createRouter({
     },
     { path: '/login', component: PatientLogin },
     { path: '/register', component: PatientRegister },
+    // {
+    //   path: '/admin-booking-panel',
+    //   name: 'admin-booking-panel',
+    //   component: () => import('../Admin/AdminBookingPanel.vue'),
+    // },
+    
+    // ✅ Admin route using AdminLayout
+    {
+      path: '/admin-booking-panel',
+      component: AdminLayout,
+      meta: { requiresAuth: true, requiresAdmin: true },
+      children: [
+        {
+          path: '',
+          name: 'admin-booking-panel',
+          component: () => import('../Admin/AdminBookingPanel.vue'),
+        },
+        {
+          path: '/users',
+          name: 'admin-users',
+          component: () => import('../Admin/AdminUsers.vue'),
+        },
+        {
+          path: '/settings',
+          name: 'admin-settings',
+          component: () => import('../Admin/AdminSettings.vue'),
+        },
+        {
+          path: '/dashboard',
+          name: 'admin-dashboard',
+          component: () => import('../Admin/AdminDashboard.vue'),
+        },
+      ],
+    },
 
   ],
 })
