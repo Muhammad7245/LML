@@ -1,62 +1,61 @@
 <template>
   <header
-  v-if="!shouldHideHeader"
-  @mouseenter="hovering = true"
-  @mouseleave="hovering = false"
-  :class="{ hovered: hovering, scrolled: scrolled }"
->
+    v-if="!shouldHideHeader"
+    @mouseenter="hovering = true"
+    @mouseleave="hovering = false"
+    :class="{ hovered: hovering, scrolled: scrolled }"
+  >
+  <div class="header-container">
+  <img
+    alt="Vue logo"
+    class="logo"
+    src="/public/images/logos/LML_logo.png"
+    width="125"
+    height="125"
+  />
 
-    <div class="header-container">
-      <img
-        alt="Vue logo"
-        class="logo"
-        src="/public/images/logos/LML_logo.png"
-        width="125"
-        height="125"
-      />
+  <!-- Hamburger Button for Mobile -->
+  <button class="hamburger" @click="isNavOpen = !isNavOpen">
+    <i class="fas fa-bars"></i>
+  </button>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/book-appointment">Book Appointment</RouterLink>
-        <RouterLink to="/locations">Locations</RouterLink>
-        <RouterLink to="/patient-reports">Patient Reports</RouterLink>
-        <RouterLink to="/test-catalog">Test Catalog</RouterLink>
-        <RouterLink to="/faq">FAQ</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <!-- Nav with conditional visibility on small screens -->
+  <nav :class="{ open: isNavOpen }">
+    <RouterLink to="/">Home</RouterLink>
+    <RouterLink to="/book-appointment">Book Appointment</RouterLink>
+    <RouterLink to="/locations">Locations</RouterLink>
+    <RouterLink to="/patient-reports">Patient Reports</RouterLink>
+    <RouterLink to="/test-catalog">Test Catalog</RouterLink>
+    <RouterLink to="/faq">FAQ</RouterLink>
+    <RouterLink to="/about">About</RouterLink>
+  </nav>
 
-      <div class="header-icons">
-        <button class="icon-btn">
-          <i class="fas fa-search"></i>
-        </button>
+  <div class="header-icons">
+    <button class="icon-btn"><i class="fas fa-search"></i></button>
 
-        <!-- User Icon with Dropdown -->
-        <div class="user-dropdown" ref="dropdownRef">
-          <button class="icon-btn" @click="toggleDropdown">
-            <i class="fas fa-user"></i>
-          </button>
-
-          <div v-if="isDropdownOpen" class="dropdown-menu">
-            <RouterLink to="/profile">My Profile</RouterLink>
-            <RouterLink to="/settings">Settings</RouterLink>
-            <RouterLink to="/logout">Logout</RouterLink>
-            <RouterLink to="/register">Register</RouterLink>
-            <RouterLink to="/login">Login</RouterLink>
-            <RouterLink to="/admin-booking-panel">Admin</RouterLink>
-            
-          </div>
-        </div>
-
-        <button class="icon-btn">
-          <i class="fas fa-shopping-cart"></i>
-        </button>
+    <!-- User Dropdown -->
+    <div class="user-dropdown" ref="dropdownRef">
+      <button class="icon-btn" @click="toggleDropdown">
+        <i class="fas fa-user"></i>
+      </button>
+      <div v-if="isDropdownOpen" class="dropdown-menu">
+        <RouterLink to="/profile">My Profile</RouterLink>
+        <RouterLink to="/settings">Settings</RouterLink>
+        <RouterLink to="/logout">Logout</RouterLink>
+        <RouterLink to="/register">Register</RouterLink>
+        <RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/admin-booking-panel">Admin</RouterLink>
       </div>
     </div>
+
+    <button class="icon-btn"><i class="fas fa-shopping-cart"></i></button>
+  </div>
+</div>
+
   </header>
 
   <!-- Spacer to prevent header overlap -->
   <div v-if="needsSpacer" class="header-spacer"></div>
-
 
   <RouterView />
 </template>
@@ -72,6 +71,9 @@ const scrolled = ref(false)
 // Dropdown state and ref
 const isDropdownOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
+
+// Navigation state for mobile
+const isNavOpen = ref(false)
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
@@ -97,23 +99,49 @@ onBeforeUnmount(() => {
 // Route logic
 const route = useRoute()
 
-const hideHeaderRoutes = ['/admin-booking-panel', '/login', '/register', '/admin', '/dashboard', '/users', '/settings']
+const hideHeaderRoutes = [
+  '/admin-booking-panel',
+  '/login',
+  '/register',
+  '/admin',
+  '/dashboard',
+  '/users',
+  '/settings',
+]
 const shouldHideHeader = computed(() => hideHeaderRoutes.includes(route.path))
 
-
-const specialRoutes = ['/test-catalog', '/about', '/faq', '/locations', '/book-appointment', '/patient-reports']
+const specialRoutes = [
+  '/test-catalog',
+  '/about',
+  '/faq',
+  '/locations',
+  '/book-appointment',
+  '/patient-reports',
+]
 const needsSpacer = computed(() => specialRoutes.includes(route.path))
 
 const updateHeaderState = () => {
   scrolled.value = window.scrollY > 50 || specialRoutes.includes(route.path)
 }
 
-watch(() => route.path, () => {
-  updateHeaderState()
-})
+watch(
+  () => route.path,
+  () => {
+    updateHeaderState()
+  },
+)
 </script>
 
 <style scoped>
+/* Hamburger Button */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+}
 /* General Header Styling */
 header {
   position: fixed;
@@ -132,20 +160,26 @@ header {
 
 .header-container {
   display: flex;
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
   justify-content: space-between;
   align-items: center;
+  padding: 0 1.5rem;
 }
 
 .logo {
-  display: block;
-  width: 230px;
-  height: 50px;
+  width: auto;
+  height: 60px; /* adjust height only */
+  max-height: 100%;
 }
 
 /* Navigation Styling */
 nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
   flex-grow: 1;
-  text-align: center;
 }
 
 nav a {
@@ -156,7 +190,13 @@ nav a {
   color: white;
   font-size: 1.1rem;
   font-weight: 500;
-  transition: color 0.3s, transform 0.3s;
+  transition:
+    color 0.3s,
+    transform 0.3s;
+
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.25rem;
+  white-space: nowrap;
 }
 
 nav a:hover {
@@ -166,7 +206,8 @@ nav a:hover {
 /* Icons */
 .header-icons {
   display: flex;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 1rem;
 }
 
 .icon-btn {
@@ -174,7 +215,9 @@ nav a:hover {
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  transition: transform 0.3s, color 0.3s;
+  transition:
+    transform 0.3s,
+    color 0.3s;
   color: white;
 }
 
@@ -262,19 +305,39 @@ header.scrolled .icon-btn:hover i {
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .hamburger {
+    display: block;
+  }
   .header-container {
+    height: auto; /* allow height to expand when stacked */
     flex-direction: column;
-    align-items: center;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .logo {
+    height: 50px;
+    margin-bottom: 0.5rem;
   }
 
   nav {
-    text-align: center;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     margin-top: 1rem;
+  }
+  nav.open {
+    display: flex;
+  }
+  nav a {
+    margin: 0.5rem 0;
+    font-size: 1rem;
   }
 
   .header-icons {
-    margin-top: 1rem;
-    gap: 1rem;
+    margin-top: 0.5rem;
+    gap: 0.75rem;
   }
 }
 </style>
