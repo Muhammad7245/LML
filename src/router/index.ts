@@ -8,6 +8,7 @@ import Faq from '../views/Faq.vue'
 import AboutView from '../views/AboutView.vue'
 import PatientLogin from '@/views/PatientLogin.vue'
 import PatientRegister from '@/views/PatientRegister.vue'
+import { useAuthStore } from '@/stores/auth'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
@@ -50,6 +51,12 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../user/MyProfile.vue'),
+    },
+
     { path: '/login', component: PatientLogin },
     { path: '/register', component: PatientRegister },
     // {
@@ -89,5 +96,37 @@ const router = createRouter({
 
   ],
 })
+
+/**
+ * 🔐 Global Navigation Guard
+ * Redirect to login if token is missing
+ * Restrict access to admin routes
+ */
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+
+  // Load user from localStorage if not already loaded
+  if (!auth.token) {
+    const token = localStorage.getItem('auth_token')
+    const user = localStorage.getItem('auth_user')
+    if (token && user) {
+      auth.token = token
+      auth.user = JSON.parse(user)
+    }
+  }
+
+  // Protect routes requiring login
+  if (to.meta.requiresAuth && !auth.token) {
+    return next('/login')
+  }
+
+  // Admin-only routes
+  // if (to.meta.requiresAdmin && (!auth.token || !auth.user?.isAdmin)) {
+  //   return next('/')
+  // }
+
+  next()
+})
+
 
 export default router

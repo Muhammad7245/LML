@@ -25,7 +25,6 @@
           />
         </div>
 
-        <!-- Replace your existing password input with this block -->
         <div class="mb-4">
           <label class="block text-sm font-medium mb-1">Password</label>
           <div class="relative">
@@ -45,11 +44,16 @@
         </div>
 
         <button
-          @click="register"
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          @click="handleRegister"
+          class="w-full bg-[#2f3193] hover:bg-blue-700 text-white py-2 px-4 rounded"
+          :disabled="auth.loading"
         >
-          Register
+          {{ auth.loading ? 'Registering...' : 'Register' }}
         </button>
+
+        <p v-if="auth.error" class="text-red-500 text-center mt-2 text-sm">
+          {{ auth.error }}
+        </p>
 
         <p class="text-center text-sm mt-4">
           Already have an account?
@@ -57,31 +61,61 @@
         </p>
       </div>
 
-      <!-- Right: Same Portal Features -->
-      <div class="bg-blue-600 text-white p-8 space-y-4">
-        <h3 class="text-lg font-semibold mb-4">Portal Features</h3>
-        <ul class="space-y-2">
-          <li class="flex items-center">
-            <span class="mr-2">📄</span> View and download your laboratory test results
-          </li>
-          <li class="flex items-center">
-            <span class="mr-2">🕒</span> Access your complete testing history
-          </li>
-          <li class="flex items-center">
-            <span class="mr-2">📊</span> Track health trends with visual reports
-          </li>
-          <li class="flex items-center">
-            <span class="mr-2">📅</span> Manage your upcoming appointments
-          </li>
-          <li class="flex items-center">
-            <span class="mr-2">🔗</span> Share results securely with your healthcare providers
-          </li>
-          <li class="flex items-center">
-            <span class="mr-2">🔔</span> Set up notifications for new test results
-          </li>
-        </ul>
-        <a href="#" class="block mt-6 text-white underline">▶️ Watch Portal Tutorial</a>
-      </div>
+      <!-- Right: Portal Features -->
+      <div class="bg-[#2f3193] text-white p-8 rounded-r-xl shadow-lg space-y-6 max-w-md mx-auto">
+  <h3 class="text-2xl font-bold border-b border-white/30 pb-2">Portal Features</h3>
+  <ul class="space-y-4">
+    <li class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-white mt-1" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+      </svg>
+      <span>View and download your laboratory test results</span>
+    </li>
+    <li class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-white mt-1" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+      </svg>
+      <span>Access your complete testing history</span>
+    </li>
+    <li class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-white mt-1" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+      </svg>
+      <span>Track health trends with visual reports</span>
+    </li>
+    <li class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-white mt-1" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+      </svg>
+      <span>Manage your upcoming appointments</span>
+    </li>
+    <li class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-white mt-1" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+      </svg>
+      <span>Share results securely with your healthcare providers</span>
+    </li>
+    <li class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-white mt-1" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+      </svg>
+      <span>Set up notifications for new test results</span>
+    </li>
+  </ul>
+</div>
+
     </div>
   </div>
 </template>
@@ -89,33 +123,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { useAuthStore } from '../stores/auth'
 
-// Form fields
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
-// Router instance for navigation
 const router = useRouter()
+const auth = useAuthStore()
 
-// Register function
-const register = async () => {
-  console.log('Registering with:', {
-    name: name.value,
-    email: email.value,
-    password: password.value,
-  })
-
-  // Perform registration API call
-  await axios.post('http://localhost:5000/api/register', {
-    name: name.value,
-    email: email.value,
-    password: password.value,
-  })
-
-  // Redirect to login after registration
-  router.push('/login')
+const handleRegister = async () => {
+  const success = await auth.register(name.value, email.value, password.value)
+  if (success) {
+    router.push('/login')
+  }
 }
 </script>

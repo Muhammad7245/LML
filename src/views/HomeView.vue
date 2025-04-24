@@ -22,9 +22,9 @@ import FaqSection from './Faq.vue';
             Book your laboratory appointments online without phone calls or emails. Fast, reliable results from certified specialists.
           </p>
           <div class="flex gap-4">
-            <button class="px-6 py-3 bg-[#2f3193] hover:bg-blue-700 rounded-lg text-white font-semibold transition">
+            <a href="/book-appointment" class="px-6 py-3 bg-[#2f3193] hover:bg-blue-700 rounded-lg text-white font-semibold transition">
               Book Appointment
-            </button>
+            </a>
             <button class="px-6 py-3 bg-white text-black hover:bg-blue-100 rounded-lg font-semibold transition">
               Our Services
             </button>

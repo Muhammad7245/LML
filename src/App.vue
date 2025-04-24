@@ -41,7 +41,7 @@
       <div v-if="isDropdownOpen" class="dropdown-menu">
         <RouterLink to="/profile">My Profile</RouterLink>
         <RouterLink to="/settings">Settings</RouterLink>
-        <RouterLink to="/logout">Logout</RouterLink>
+        <button @click="logout" class="dropdown-menu-link">Logout</button>
         <RouterLink to="/register">Register</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/admin-booking-panel">Admin</RouterLink>
@@ -63,10 +63,22 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+
+// Router instance
+const router = useRouter()
+const logout = async () => {
+  await auth.logout() // clear store (assuming your auth store has a logout action)
+  router.push('/login') // redirect to login page
+}
+
 
 // Header hover and scroll state
 const hovering = ref(false)
 const scrolled = ref(false)
+const auth = useAuthStore()
 
 // Dropdown state and ref
 const isDropdownOpen = ref(false)
@@ -89,6 +101,7 @@ onMounted(() => {
   window.addEventListener('scroll', updateHeaderState)
   document.addEventListener('click', handleClickOutside)
   updateHeaderState()
+  auth.loadAuth()
 })
 
 onBeforeUnmount(() => {
@@ -117,6 +130,7 @@ const specialRoutes = [
   '/locations',
   '/book-appointment',
   '/patient-reports',
+  '/profile',
 ]
 const needsSpacer = computed(() => specialRoutes.includes(route.path))
 
@@ -300,6 +314,22 @@ header.scrolled .icon-btn:hover i {
 }
 
 .dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+.dropdown-menu-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: none;
+  font: inherit;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-menu-link:hover {
   background-color: #f0f0f0;
 }
 
