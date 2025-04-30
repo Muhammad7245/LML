@@ -9,6 +9,7 @@ import AboutView from '../views/AboutView.vue'
 import PatientLogin from '@/views/PatientLogin.vue'
 import PatientRegister from '@/views/PatientRegister.vue'
 import { useAuthStore } from '@/stores/auth'
+import Footer from '@/components/footer/Footer.vue'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
@@ -56,6 +57,12 @@ const router = createRouter({
       name: 'profile',
       component: () => import('../user/MyProfile.vue'),
     },
+    {
+      path: '/footer',
+      name: 'footer',
+      component: () => import('../components/footer/Footer.vue'),
+    },
+    
 
     { path: '/login', component: PatientLogin },
     { path: '/register', component: PatientRegister },

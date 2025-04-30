@@ -48,16 +48,17 @@
       </div>
     </div>
 
-    <button class="icon-btn"><i class="fas fa-shopping-cart"></i></button>
+    <!-- <button class="icon-btn"><i class="fas fa-shopping-cart"></i></button> -->
   </div>
 </div>
-
-  </header>
+</header>
 
   <!-- Spacer to prevent header overlap -->
   <div v-if="needsSpacer" class="header-spacer"></div>
 
   <RouterView />
+  <AppFooter v-if="!shouldHideFooter"/> 
+
 </template>
 
 <script setup lang="ts">
@@ -65,6 +66,7 @@ import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import AppFooter from '@/components/footer/Footer.vue'
 
 
 // Router instance
@@ -144,6 +146,18 @@ watch(
     updateHeaderState()
   },
 )
+
+  // Optionally, hide footer on the same routes as header
+  const hideFooterRoutes = [
+    '/admin-booking-panel',
+    '/login',
+    '/register',
+    '/admin',
+    '/dashboard',
+    '/users',
+    '/settings',
+   ];
+  const shouldHideFooter = computed(() => hideFooterRoutes.includes(route.path));
 </script>
 
 <style scoped>

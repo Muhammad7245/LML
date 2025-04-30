@@ -15,7 +15,7 @@
       <!-- Contact Info -->
       <div class="bg-white rounded-2xl shadow-md p-6">
         <h2 class="text-xl font-semibold mb-4 text-indigo-700">Contact</h2>
-        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Email:</strong> {{ auth.user?.email }}</p>
         <p><strong>Phone:</strong> {{ user.phone }}</p>
         <p><strong>Address:</strong> {{ user.address }}</p>
       </div>
@@ -31,6 +31,7 @@
       <!-- Security -->
       <div class="bg-white rounded-2xl shadow-md p-6">
         <h2 class="text-xl font-semibold mb-4 text-indigo-700">Security</h2>
+        <p><strong>Role:</strong> {{ auth.user?.role }}</p>
         <p>
           <strong>Two-Factor Auth:</strong> {{ user.twoFactorEnabled ? 'Enabled' : 'Disabled' }}
         </p>

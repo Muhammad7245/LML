@@ -2,6 +2,7 @@
 import ServicesSection from '@/views/ServicesSection.vue'
 import TestCatalog from './TestCatalog.vue';
 import FaqSection from './Faq.vue';
+import AppFooter from '@/components/footer/Footer.vue'
 </script>
 
 <template>
@@ -42,6 +43,8 @@ import FaqSection from './Faq.vue';
   <FaqSection/>
 
 </div>
+
+
     
   </div>
 </template>
