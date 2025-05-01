@@ -98,6 +98,11 @@ const router = createRouter({
           name: 'admin-dashboard',
           component: () => import('../Admin/AdminDashboard.vue'),
         },
+        {
+          path: '/reprts',
+          name: 'reports',
+          component: () => import('../Admin/PDF.vue'),
+        },
       ],
     },
 

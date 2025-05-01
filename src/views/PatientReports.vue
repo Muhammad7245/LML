@@ -1,6 +1,6 @@
 <template>
   <!-- Welcome/Login Message -->
-  <div class="max-w-6xl mx-auto px-4 pt-6 pb-4">
+  <div class="max-w-6x2 ">
     <div
       v-if="auth.user"
       class="welcome-message bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-lg shadow-md text-xl md:text-2xl font-semibold text-gray-800 flex items-center"

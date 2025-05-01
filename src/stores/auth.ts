@@ -7,7 +7,7 @@ export const useAuthStore = defineStore('auth', {
     loading: false,
     error: '',
     token: '',
-    user: null as null | { id: string; name: string; email: string },
+    user: null as null | { id: string; name: string; email: string ; role: string }, // ✅ Add user object
   }),
   actions: {
     async register(name: string, email: string, password: string): Promise<boolean> {
