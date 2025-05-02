@@ -15,18 +15,20 @@
         </span>
       </span>
     </div>
-    <div v-else class="text-center p-6 bg-red-50 border border-red-200 rounded-lg shadow">
+     <!-- Patient Reports Section (only if Not logged in) -->
+    <div v-else class="text-center py-21 bg-red-50 border border-red-200 rounded-lg shadow">
       <h1 class="error-heading text-xl md:text-2xl font-bold text-red-700 mb-4">
         Authentication Required
       </h1>
       <p class="text-red-600 mb-4">Please log in to view and manage your patient reports.</p>
       <RouterLink
         to="/login"
-        class="inline-block px-6 py-2 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 transition duration-200"
+        class="inline-block px-6 py-2  bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700 transition duration-200"
       >
         Go to Login
       </RouterLink>
     </div>
+    
   </div>
 
   <!-- Patient Reports Section (only if logged in) -->
@@ -65,23 +67,23 @@
   <div
     v-for="pdf in patientPdfs"
     :key="pdf.filename"
-    class="report-card bg-[white] rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col "
+    class="report-card bg-[#333595] rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col "
   >
     <div class="p-5 space-y-2">
       <div class="flex items-center">
         <i class="fas fa-file-pdf text-2xl text-red-500 mr-2"></i>
-        <h2 class="text-lg font-semibold text-gray-800 truncate" :title="pdf.title">
+        <h2 class="text-lg font-semibold text-white truncate" :title="pdf.title">
           {{ pdf.title }}
         </h2>
       </div>
       
-      <p v-if="pdf.description" class="text-sm text-gray-600">
+      <p v-if="pdf.description" class="text-sm text-white">
         {{ pdf.description }}
       </p>
-      <p class="text-xs text-gray-500">
+      <p class="text-xs text-gray-400">
         <i class="fas fa-calendar-alt mr-1"></i> Uploaded: {{ formatDate(pdf.uploadedAt) }}
       </p>
-      <p class="text-xs text-gray-500">
+      <p class="text-xs text-gray-400">
         <i class="fas fa-database mr-1"></i> Size: {{ formatFileSize(pdf.size) }}
       </p>
 

@@ -226,7 +226,7 @@ header {
 }
 
 .header-spacer {
-  height: 90px;
+  height: 80px;
 }
 
 /* Logo styling with hover effect */
@@ -242,7 +242,7 @@ header {
 
 .logo {
   width: auto;
-  height: 60px;
+  height: 50px;
   max-height: 100%;
   object-fit: contain;
   transition: filter 0.3s ease;
