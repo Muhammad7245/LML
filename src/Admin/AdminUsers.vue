@@ -591,7 +591,7 @@ interface Notification {
 }
 
 // --- Constants ---
-const API_BASE_URL = 'http://localhost:5000/api'; // Centralize API URL
+const API_BASE_URL = 'https://lm-backend-s43w.onrender.com/api'; // Centralize API URL
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 

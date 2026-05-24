@@ -125,7 +125,7 @@ const selectedAppointment = ref<Appointment | null>(null)
 
 const fetchAppointments = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/api/all-appointments')
+    const response = await axios.get('https://lm-backend-s43w.onrender.com/api/all-appointments')
     appointments.value = response.data.allappointments
   } catch (error) {
     console.error('Error fetching appointments:', error)
@@ -144,7 +144,7 @@ const editAppointment = (id: string) => {
 
 const deleteAppointment = async (id: string) => {
   try {
-    await axios.delete(`http://localhost:5000/api/delete/${id}`)
+    await axios.delete(`https://lm-backend-s43w.onrender.com/api/delete/${id}`)
     appointments.value = appointments.value.filter((item) => item._id !== id)
   } catch (error) {
     console.error('Error deleting appointment:', error)

@@ -127,7 +127,7 @@
     name: 'PdfViewer',
     setup() {
       // Base API URL - change this to match your backend URL
-      const API_URL = 'http://localhost:5000/api';
+      const API_URL = 'https://lm-backend-s43w.onrender.com/api';
       
       // Data refs
       const pdfList = ref<PdfDocument[]>([]);

@@ -136,7 +136,7 @@ import { RouterLink } from 'vue-router'; // Ensure RouterLink is imported if not
 
 // --- Pinia Store & API URL ---
 const auth = useAuthStore()
-const API_BASE_URL = 'http://localhost:5000/api'; // Make sure this matches your backend setup
+const API_BASE_URL = 'https://lm-backend-s43w.onrender.com/api'; // Make sure this matches your backend setup
 
 // --- Reactive State ---
 interface PdfMetadata {

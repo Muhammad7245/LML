@@ -252,7 +252,7 @@ const formDisabled = ref(false)
 const isLoading = ref(false)
 const attemptedSubmit = ref(false)
 
-const apiURL = 'http://localhost:5000/api/book'
+const apiURL = 'https://lm-backend-s43w.onrender.com/api/book'
 
 const showDialog = ref(false)
 const dialogMessage = ref('')
